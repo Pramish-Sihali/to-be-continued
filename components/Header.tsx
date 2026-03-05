@@ -1,9 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { DemoLoginDialog } from './auth/DemoLoginDialog';
 import { Button } from './ui/button';
 import { LogOut, User } from 'lucide-react';
 import {
@@ -16,12 +15,11 @@ import {
 } from './ui/dropdown-menu';
 
 export function Header() {
-  const { user, isAuthenticated, login, logout } = useAuth();
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const router = useRouter();
 
   return (
-    <>
-      <header className="bg-[oklch(0.95_0.015_75.0)] border-b border-border/60 sticky top-0 z-50 shadow-sm relative overflow-hidden">
+    <header className="bg-[oklch(0.95_0.015_75.0)] border-b border-border/60 sticky top-0 z-50 shadow-sm relative overflow-hidden">
         {/* Texture overlay */}
         <div
           className="absolute inset-0 opacity-30"
@@ -72,24 +70,26 @@ export function Header() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => setShowLoginDialog(true)}
-                >
-                  Login
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push('/login')}
+                  >
+                    Sign in
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    onClick={() => router.push('/signup')}
+                  >
+                    Sign up
+                  </Button>
+                </div>
               )}
             </div>
           </div>
         </div>
-      </header>
-
-      <DemoLoginDialog
-        open={showLoginDialog}
-        onOpenChange={setShowLoginDialog}
-        onLogin={login}
-      />
-    </>
+    </header>
   );
 }
